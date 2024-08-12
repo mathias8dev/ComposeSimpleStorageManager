@@ -6,7 +6,6 @@ import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
-import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +51,6 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.datlag.mimemagic.MimeData
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
@@ -61,35 +60,28 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-@Parcelize
-data class SerializableFiles(
-    val paths: List<String>
-) : Parcelable
-
-fun Collection<File>.asSerializableFile(): SerializableFiles {
-    return SerializableFiles(this.map { it.path })
-}
-
-fun SerializableFiles.asFileCollection(): List<File> {
-    return this.paths.map { File(it) }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Destination
 @RootNavGraph
 fun FileListScreen(
-    filesPath: SerializableFiles?,
+    rootPath: String?,
     navigator: DestinationsNavigator
 ) {
     val localSnackbarHostState = LocalSnackbarHostState.current
     val coroutineScope = rememberCoroutineScope()
     val localContext = LocalContext.current
 
+    val files by remember(rootPath) {
+        derivedStateOf {
+            rootPath?.let { File(it).listFiles()?.toList() } ?: emptyList()
+        }
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        itemsIndexed(items = filesPath?.asFileCollection() ?: emptyList()) { _, file ->
+        itemsIndexed(items = files) { _, file ->
             FileComposable(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -101,7 +93,7 @@ fun FileListScreen(
                     } else if (file.isDirectory) {
                         navigator.navigate(
                             FileListScreenDestination(
-                                filesPath = file.listFiles()?.toList()?.asSerializableFile()
+                                rootPath = file.absolutePath
                             )
                         )
                     } else {
@@ -198,15 +190,10 @@ fun HomeScreen(
         }
 
         AnimatedVisibility(visible = showHomeScreenContent) {
-            val externalFiles by remember {
-                mutableStateOf(Environment.getExternalStorageDirectory().listFiles())
-            }
-            externalFiles?.let {
-                FileListScreen(
-                    filesPath = it.toList().asSerializableFile(),
-                    navigator = navigator
-                )
-            }
+            FileListScreen(
+                rootPath = Environment.getExternalStorageDirectory().absolutePath,
+                navigator = navigator
+            )
         }
     }
 }
