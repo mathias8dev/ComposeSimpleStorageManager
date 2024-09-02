@@ -1,4 +1,4 @@
-package com.mathias8dev.composesimplestoragemanager.ui
+package com.mathias8dev.composesimplestoragemanager.ui.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,6 +15,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageScope
 import coil.request.ImageRequest
+import com.mathias8dev.composesimplestoragemanager.utils.otherwise
 
 @Composable
 fun ImageLoaderComposable(

@@ -1,25 +1,88 @@
-package com.mathias8dev.composesimplestoragemanager.ui
+package com.mathias8dev.composesimplestoragemanager.utils
 
 import android.content.ContentResolver
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Resources
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import com.mathias8dev.composesimplestoragemanager.BuildConfig
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+
+
+fun LocalDateTime.toFileFormat(): String {
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm a")
+    return this.format(formatter)
+}
+
+
+fun File.isImageMimeType(): Boolean {
+    return this.extension == "jpg" ||
+            this.extension == "png" ||
+            this.extension == "jpeg" ||
+            this.extension == "bmp" ||
+            this.extension == "webp" ||
+            (this.extension == "gif" && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) ||
+            (this.extension == "heif" && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+}
+
+fun File.isTextMimeType(): Boolean {
+    return this.extension == "txt"
+}
+
+fun File.toReadableSize(): String {
+    return this.length().asFileReadableSize()
+}
+
+fun Number.asFileReadableSize(): String {
+    val length = this.toLong()
+    val kbLimit = 1024
+    val moLimit = 1024 * 1024
+    val goLimit = 1024 * 1024 * 1024
+    if (length > goLimit) return "${length / goLimit}Go"
+    if (length > moLimit) return "${length / moLimit}Mo"
+    if (length > kbLimit) return "${length / kbLimit}Kb"
+    return "${length}Octets"
+}
+
+
+suspend fun File.asContentSchemeUri(context: Context): Uri? {
+    return suspendCoroutine { continuation ->
+        val mediaScannerClient = object : MediaScannerConnection.MediaScannerConnectionClient {
+            var connection: MediaScannerConnection? = null
+
+            init {
+                connection = MediaScannerConnection(context, this)
+                connection?.connect()
+            }
+
+            override fun onMediaScannerConnected() {
+                connection?.scanFile(absolutePath, null)
+            }
+
+            override fun onScanCompleted(path: String, uri: Uri?) {
+                connection?.disconnect()
+
+                continuation.resume(uri)
+            }
+        }
+    }
+}
 
 
 @Stable
@@ -32,7 +95,14 @@ fun Modifier.on(
 
 
 fun Dp.toPx(): Float = (this.value * Resources.getSystem().displayMetrics.density)
-fun Float.toPx(): Float = (this * Resources.getSystem().displayMetrics.density)
+fun Number.toPx(): Float = (this.toFloat() * Resources.getSystem().displayMetrics.density)
+
+@Composable
+fun Number.pxToDp() = with(LocalDensity.current) { this@pxToDp.toInt().toDp() }
+
+@Composable
+fun Dp.dpToPx() = with(LocalDensity.current) { this@dpToPx.toPx() }
+
 
 fun <T> Boolean.select(first: T, second: T): T = if (this) first else second
 
@@ -94,10 +164,3 @@ fun PaddingValues.asStdNotConsumedValues() = PaddingValues(
 
 fun <T> T?.otherwise(value: T): T = this ?: value
 inline fun <T> T?.otherwise(block: () -> T): T = this ?: block()
-
-
-@Composable
-fun stdNotConsumedPaddingValues() = PaddingValues(
-    top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding(),
-    bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-)

@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">ComposeSimpleStorageManager</string>
+    <string name="search">Rechercher</string>
+    <string name="view_mode">View mode</string>
+    <string name="add">Add</string>
+    <string name="sort">Sort</string>
+    <string name="select_all">Select all</string>
+    <string name="reload">Reload</string>
+    <string name="compact">Compact</string>
+    <string name="name_az">Name (A-Z)</string>
+    <string name="name_za">Name (Z-A)</string>
+    <string name="size_smaller">Size (Smaller)</string>
+    <string name="size_bigger">Size (Bigger)</string>
+    <string name="date_older">Date (Older)</string>
+    <string name="date_newer">Date (Newer)</string>
+    <string name="type_ascending">Type (Ascending)</string>
+    <string name="type_descending">Type (Descending)</string>
+    <string name="shuffled">Shuffled</string>
+    <string name="gallery">Gallery</string>
+    <string name="grid">Grid</string>
+    <string name="minimal">Minimal</string>
+    <string name="wrapped">Wrapped</string>
+    <string name="detailed">Detailed</string>
+    <string name="columned">Columned</string>
+    <string name="type_to_filter">Type to filter</string>
+    <string name="pdf_viewer_activity_name">Pdf viewer cssm</string>
+    <string name="image_viewer_activity_name">Image viewer cssm</string>
+    <string name="video_player_activity_name">Video player cssm</string>
 </resources>

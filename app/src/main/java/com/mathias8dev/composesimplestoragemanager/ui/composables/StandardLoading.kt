@@ -1,4 +1,4 @@
-package com.mathias8dev.composesimplestoragemanager.ui
+package com.mathias8dev.composesimplestoragemanager.ui.composables
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.mathias8dev.composesimplestoragemanager.utils.toPx
 
 
 @Composable

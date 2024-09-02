@@ -1,4 +1,4 @@
-package com.mathias8dev.composesimplestoragemanager.ui
+package com.mathias8dev.composesimplestoragemanager.ui.composables
 
 
 import androidx.compose.foundation.background
@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.mathias8dev.composesimplestoragemanager.utils.on
 
 
 @OptIn(ExperimentalMaterial3Api::class)

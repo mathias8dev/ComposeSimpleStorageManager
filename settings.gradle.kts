@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComposeSimpleStorageManager"
 include(":app")
- 
+include(":pdfviewer")

@@ -7,9 +7,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
@@ -32,7 +36,7 @@ import coil.decode.VideoFrameDecoder
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.mathias8dev.composesimplestoragemanager.ui.screens.NavGraphs
+import com.mathias8dev.composesimplestoragemanager.ui.NavGraphs
 import com.mathias8dev.composesimplestoragemanager.ui.theme.ComposeSimpleStorageManagerTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
@@ -56,6 +60,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setupEdgeToEdge()
         setupCoilImageLoader()
+        
         setContent {
             val navController = rememberNavController()
             val bottomSheetNavigator = rememberBottomSheetNavigator()
@@ -81,13 +86,16 @@ class MainActivity : ComponentActivity() {
                     CompositionLocalProvider(
                         LocalSnackbarHostState provides snackbarHostState,
                     ) {
+
                         ModalBottomSheetLayout(
-                            modifier = Modifier.padding(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding(),
-                                start = innerPadding.calculateStartPadding(layoutDirection),
-                                end = innerPadding.calculateEndPadding(layoutDirection),
-                            ),
+                            modifier = Modifier
+                                .padding(
+                                    top = 0.dp,
+                                    bottom = innerPadding.calculateBottomPadding(),
+                                    start = innerPadding.calculateStartPadding(layoutDirection),
+                                    end = innerPadding.calculateEndPadding(layoutDirection),
+                                )
+                                .imePadding(),
                             bottomSheetNavigator = bottomSheetNavigator,
                             sheetShape = RoundedCornerShape(16.dp),
                         ) {
@@ -102,6 +110,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 
     private fun setupEdgeToEdge() {
         enableEdgeToEdge()

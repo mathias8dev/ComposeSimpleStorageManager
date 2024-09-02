@@ -1,4 +1,4 @@
-package com.mathias8dev.composesimplestoragemanager.ui
+package com.mathias8dev.composesimplestoragemanager.ui.composables
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode

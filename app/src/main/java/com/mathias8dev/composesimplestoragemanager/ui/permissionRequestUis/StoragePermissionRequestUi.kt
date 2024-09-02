@@ -1,4 +1,4 @@
-package com.mathias8dev.composesimplestoragemanager.ui
+package com.mathias8dev.composesimplestoragemanager.ui.permissionRequestUis
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mathias8dev.composesimplestoragemanager.R
+import com.mathias8dev.composesimplestoragemanager.ui.composables.StandardButton
+import com.mathias8dev.composesimplestoragemanager.ui.composables.StandardDialog
 import com.mathias8dev.permissionhelper.permission.OneShotPermissionsRequestUi
 import com.mathias8dev.permissionhelper.permission.Permission
 
